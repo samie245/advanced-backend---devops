@@ -1,10 +1,18 @@
 from sqlalchemy import Integer, String, Column, DateTime, ForeignKey, create_engine
 from sqlalchemy.orm import Session, declarative_base
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+import jwt 
 
 DB_PATH = "warehouse.db"
 engine = create_engine(f"sqlite:///{DB_PATH}")
 Base = declarative_base()
+
+USERNAME = "Sammie"
+PASSWORD = "meow234"
+ACCESS_TOKEN_EXPIRY = 15 # expires after that many mins
+REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 # 7 days in mins
+SECRET_KEY = "rats&cats"
+ALGORITHM = "HS256"
 
 class packages(Base):
     __tablename__ = "packages"
@@ -199,3 +207,43 @@ def create_dispatchBatches(destination, vehicle_number):
     data = convert_batch_dict(batch)
     session.close()
     return data
+
+
+# verifying login 
+def verify_login(username, password):
+    if username == USERNAME and password == PASSWORD:
+        access_token = create_token(username=username, token_type="access")
+        refresh_token = create_token(username=username, token_type="refresh")
+        return {"acess_token": access_token, "refresh_token": refresh_token}
+    return None
+
+# creating jwt token
+# jwt token has three parts:
+# HEADER - its a json object that has an algorithm and token type (jwt)
+# PAYLOAD - has all the meta data (claims)
+#           and other registry data like: issuer (iss), subject or userid (sub), expiration (exp), issued (iat)
+#           can make custom claims
+# SIGNATURE - has a secret code that encodes header and payload
+#           any tampering with a token makes it invalid bec of the signature secret code protection 
+def create_token(username, token_type):
+    time = ACCESS_TOKEN_EXPIRY # takes it as access token default, if its refresh, it changes
+    if token_type == "refresh":
+        time = REFRESH_TOKEN_EXPIRY    
+    payload = {
+        "username": username,
+        "token_type": token_type,
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=time)
+    }
+    token = jwt.encode(payload=payload, key=SECRET_KEY, algorithm=ALGORITHM)
+    return token
+
+# verifying token
+def verify_token(token, token_type):
+    try:
+        payload = jwt.decode(jwt=token, key=SECRET_KEY, algorithms=ALGORITHM)
+    except:
+        return False
+    
+    if payload["token_type"] == token_type:
+        return payload["username"]
+    return False
