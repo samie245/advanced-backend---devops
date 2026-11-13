@@ -2,17 +2,29 @@ from sqlalchemy import Integer, String, Column, DateTime, ForeignKey, create_eng
 from sqlalchemy.orm import Session, declarative_base
 from datetime import datetime, timedelta, timezone
 import jwt 
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
+from models import TokenPayload
 
 DB_PATH = "warehouse.db"
 engine = create_engine(f"sqlite:///{DB_PATH}")
 Base = declarative_base()
 
-USERNAME = "Sammie"
-PASSWORD = "meow234"
+ADMIN_USERNAME = "ratatouille"
+ADMIN_PASSWORD = "remytherat"
 ACCESS_TOKEN_EXPIRY = 15 # expires after that many mins
 REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 # 7 days in mins
 SECRET_KEY = "rats&cats"
 ALGORITHM = "HS256"
+
+ph = PasswordHasher()
+
+class User(Base):
+    __tablename__ = "Users"
+    user_id = Column(Integer, primary_key=True)
+    user_type = Column(String)
+    username = Column(String)
+    password = Column(String)
 
 class packages(Base):
     __tablename__ = "packages"
@@ -144,7 +156,7 @@ def search_package(destination=None, status=None, arrival_date=None):
     if arrival_date is not None:
         by_date = []
         for item in result:
-            if str(item["arrival_date"])[:10] == arrival_date:
+            if item["arrival_date"].date() == arrival_date:
                 by_date.append(item)
         result = by_date
 
@@ -211,11 +223,26 @@ def create_dispatchBatches(destination, vehicle_number):
 
 # verifying login 
 def verify_login(username, password):
-    if username == USERNAME and password == PASSWORD:
-        access_token = create_token(username=username, token_type="access")
-        refresh_token = create_token(username=username, token_type="refresh")
-        return {"acess_token": access_token, "refresh_token": refresh_token}
-    return None
+    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        access_token = create_token(user_id=0, user_type="admin", username=username, token_type="access")
+        refresh_token = create_token(user_id=0, user_type="admin", username=username, token_type="refresh")
+        return {"access_token": access_token, "refresh_token": refresh_token}
+    session = Session(engine)
+    user = session.query(User).filter_by(username=username).first()
+    if user is None:
+        session.close()
+        return False
+    try:
+        ph.verify(user.password, password)
+    except VerifyMismatchError:
+        session.close()
+        return False
+    user_id = user.user_id
+    user_type = user.user_type
+    session.close()
+    access_token = create_token(user_id=user_id, user_type=user_type, username=username, token_type="access")
+    refresh_token = create_token(user_id=user_id, user_type=user_type, username=username, token_type="refresh")
+    return {"access_token": access_token, "refresh_token": refresh_token}
 
 # creating jwt token
 # jwt token has three parts:
@@ -225,11 +252,13 @@ def verify_login(username, password):
 #           can make custom claims
 # SIGNATURE - has a secret code that encodes header and payload
 #           any tampering with a token makes it invalid bec of the signature secret code protection 
-def create_token(username, token_type):
+def create_token(user_id, user_type, username, token_type):
     time = ACCESS_TOKEN_EXPIRY # takes it as access token default, if its refresh, it changes
     if token_type == "refresh":
         time = REFRESH_TOKEN_EXPIRY    
     payload = {
+        "user_id": user_id,
+        "user_type":user_type,
         "username": username,
         "token_type": token_type,
         "exp": datetime.now(timezone.utc) + timedelta(minutes=time)
@@ -241,9 +270,29 @@ def create_token(username, token_type):
 def verify_token(token, token_type):
     try:
         payload = jwt.decode(jwt=token, key=SECRET_KEY, algorithms=ALGORITHM)
+        data = TokenPayload.model_validate(payload)
     except:
         return False
     
-    if payload["token_type"] == token_type:
-        return payload["username"]
+    if  data.token_type == token_type:
+        return data.username
+    return False
+
+# registering a user
+def register_user(username: str, password: str, user_type: str):
+    session = Session(engine)
+    user_exists = session.query(User).filter_by(username=username).first()
+    if user_exists is not None:
+        session.close()
+        return False
+    
+    session.add(User(username=username, password=ph.hash(password), user_type=user_type))
+    session.commit()
+    session.close()
+    return True
+
+# controlling authorizaton 
+def authenticate_role(user_type, roles):
+    if user_type in roles: 
+        return True
     return False
