@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import ValidationError
 import functions
 from models import (
-    LoginRequest, SignupRequest, TokenPair, AccessToken, MessageOut,
+    LoginRequest, SignupRequest, TokenPair, AccessToken, MessageOut, ALL_ROLES,
     ListingCreate, PriceUpdate, OfferCreate, OfferDecision, ListingSearch,
     ListingOut, ListingDetailOut, StudentListingOut,
     OfferOut, StudentOfferOut,
@@ -15,31 +15,48 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5174", "http://127.0.0.1:5174"],
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# E1 gets available listings
+# which roles can use which routes (admin can do everything)
+SELLER_ROLES = ["seller", "admin"]
+BUYER_ROLES = ["buyer", "admin"]
+
+# checks the token (401) and then the role (403), returns the user inside the token
+def require_role(token, roles):
+    user = functions.verify_token(token=token)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    if not functions.authenticate_role(user_type=user.user_type, roles=roles):
+        raise HTTPException(status_code=403, detail="Your role is not allowed to do this")
+    return user
+
+
+# E1 gets available listings (any logged in user)
 @app.get("/listings", response_model=list[ListingOut])
-def browse_listings(subject=None, condition=None, max_price=None):
+def browse_listings(subject=None, condition=None, max_price=None, token = Header(None)):
+    require_role(token, ALL_ROLES)
     try:
         filters = ListingSearch(subject=subject, condition=condition, max_price=max_price)
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=e.errors()[0]["msg"])
     return functions.get_listings(subject=filters.subject, condition=filters.condition, max_price=filters.max_price)
 
-# E2 gets one listing with its offers
+# E2 gets one listing with its offers (any logged in user)
 @app.get("/listings/{listing_id}", response_model=ListingDetailOut)
-def view_listing(listing_id: int):
+def view_listing(listing_id: int, token = Header(None)):
+    require_role(token, ALL_ROLES)
     listing = functions.get_listing(listing_id=listing_id)
     if listing is None:
         raise HTTPException(status_code=404, detail="Listing not found")
     return listing
 
-# E3 lists a book
+# E3 lists a book (seller)
 @app.post("/listings", response_model=ListingOut)
-def create_listing(listing: ListingCreate):
+def create_listing(listing: ListingCreate, token = Header(None)):
+    require_role(token, SELLER_ROLES)
     return functions.add_listing(
         seller_roll=listing.seller_roll,
         title=listing.title,
@@ -48,9 +65,10 @@ def create_listing(listing: ListingCreate):
         price=listing.price,
     )
 
-# E4 changes a listing's price
+# E4 changes a listing's price (seller)
 @app.patch("/listings/{listing_id}/price", response_model=ListingOut)
-def change_price(listing_id: int, update: PriceUpdate):
+def change_price(listing_id: int, update: PriceUpdate, token = Header(None)):
+    require_role(token, SELLER_ROLES)
     listing = functions.get_listing(listing_id=listing_id)
     if listing is None:
         raise HTTPException(status_code=404, detail="Listing not found")
@@ -61,9 +79,10 @@ def change_price(listing_id: int, update: PriceUpdate):
     return functions.update_price(listing_id=listing_id, new_price=update.price)
 
 
-# E5 yeets the listing out of existence so juniors stop dm'ing the seller
+# E5 yeets the listing out of existence so juniors stop dm'ing the seller (seller)
 @app.delete("/listings/{listing_id}", response_model=MessageOut)
-def remove_listing(listing_id: int, seller_roll: str = None):
+def remove_listing(listing_id: int, seller_roll: str = None, token = Header(None)):
+    require_role(token, SELLER_ROLES)
     if not seller_roll:
         raise HTTPException(status_code=422, detail="Seller roll is required")
     listing = functions.get_listing(listing_id=listing_id)
@@ -76,9 +95,10 @@ def remove_listing(listing_id: int, seller_roll: str = None):
     return functions.delete_listing(listing_id=listing_id)
 
 
-# E6 broke junior attempts to bargain for their degree
+# E6 broke junior attempts to bargain for their degree (buyer)
 @app.post("/offers", response_model=OfferOut)
-def make_offer(offer: OfferCreate):
+def make_offer(offer: OfferCreate, token = Header(None)):
+    require_role(token, BUYER_ROLES)
     listing = functions.get_listing(listing_id=offer.listing_id)
     if listing is None:
         raise HTTPException(status_code=404, detail="Listing not found")
@@ -93,9 +113,10 @@ def make_offer(offer: OfferCreate):
     return functions.add_offer(listing_id=offer.listing_id, buyer_roll=offer.buyer_roll, offer_price=offer.offer_price)
 
 
-# E7 seller either secures the bag or tells the junior to touch grass
+# E7 seller either secures the bag or tells the junior to touch grass (seller)
 @app.patch("/offers/{offer_id}", response_model=OfferOut)
-def decide_offer(offer_id: int, decision: OfferDecision):
+def decide_offer(offer_id: int, decision: OfferDecision, token = Header(None)):
+    require_role(token, SELLER_ROLES)
     offer = functions.get_offer(offer_id=offer_id)
     if offer is None:
         raise HTTPException(status_code=404, detail="Offer not found")
@@ -116,9 +137,10 @@ def decide_offer(offer_id: int, decision: OfferDecision):
     return functions.update_offer_status(offer_id=offer_id, action=decision.action)
 
 
-# E8 marks a listing sold
+# E8 marks a listing sold (seller)
 @app.patch("/listings/{listing_id}/sold", response_model=ListingOut)
-def mark_listing_sold(listing_id: int, seller_roll=None):
+def mark_listing_sold(listing_id: int, seller_roll=None, token = Header(None)):
+    require_role(token, SELLER_ROLES)
     listing = functions.get_listing(listing_id=listing_id)
     if listing is None:
         raise HTTPException(status_code=404, detail="Listing not found")
@@ -131,15 +153,17 @@ def mark_listing_sold(listing_id: int, seller_roll=None):
     return functions.mark_sold(listing_id=listing_id)
 
 
-# E9 gets one student's listings with their number of pending offers
+# E9 gets one student's listings with their number of pending offers (seller)
 @app.get("/students/{roll_no}/listings", response_model=list[StudentListingOut])
-def student_listings(roll_no: str):
+def student_listings(roll_no: str, token = Header(None)):
+    require_role(token, SELLER_ROLES)
     return functions.get_student_listings(roll_no=roll_no)
 
 
-# E10 gets one student's offers with the book's title and asking price
+# E10 gets one student's offers with the book's title and asking price (buyer)
 @app.get("/students/{roll_no}/offers", response_model=list[StudentOfferOut])
-def student_offers(roll_no: str):
+def student_offers(roll_no: str, token = Header(None)):
+    require_role(token, BUYER_ROLES)
     return functions.get_student_offers(roll_no=roll_no)
 
 

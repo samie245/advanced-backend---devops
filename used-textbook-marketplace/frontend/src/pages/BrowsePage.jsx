@@ -3,12 +3,15 @@ import ListingCard from "./ListingCard";
 
 const API_URL = "http://127.0.0.1:8001";
 
-function BrowsePage() {
+function BrowsePage({token, role}) {
   const [listings, setListings] = useState([]);
   const [subject, setSubject] = useState("");
   const [condition, setCondition] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [note, setNote] = useState(""); // the error message for the search
+
+  // only buyers (and admin) can make offers
+  const canOffer = role === "buyer" || role === "admin";
 
   // E1 gets all listings along with the url filters
   function getListings() {
@@ -17,7 +20,9 @@ function BrowsePage() {
     const conditionFilter = condition ? "condition=" + condition + "&" : "";
     const priceFilter = maxPrice ? "max_price=" + maxPrice : "";
 
-    fetch(API_URL + "/listings?" + subjectFilter + conditionFilter + priceFilter)
+    fetch(API_URL + "/listings?" + subjectFilter + conditionFilter + priceFilter, {
+      headers: {token: token},
+    })
       .then((response) => response.json())
       .then((data) => {
         if (data.detail) {
@@ -28,17 +33,17 @@ function BrowsePage() {
       });
   }
 
-  // E1 shows all listings when the page loads
+  // E1 shows all listings when the page loads, but only once logged in
   useEffect(() => {
-    getListings();
-  }, []);
+    if (token !== "") getListings();
+  }, [token]);
 
   // E6 junior makes an offer, setCardNote is that card's own message
   function makeOffer(listingId, buyerRoll, offerPrice, setCardNote) {
     setCardNote("");
     fetch(API_URL + "/offers", {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
+      headers: {"Content-Type": "application/json", token: token},
       body: JSON.stringify({listing_id: listingId, buyer_roll: buyerRoll, offer_price: Number(offerPrice)}),
     })
       .then((response) => response.json())
@@ -50,6 +55,8 @@ function BrowsePage() {
         }
       });
   }
+
+  if (token === "") return <p>Please log in first.</p>;
 
   return (
     <>
@@ -77,7 +84,7 @@ function BrowsePage() {
 
       <ul className="products">
         {listings.map((listing) => (
-          <ListingCard key={listing.id} listing={listing} makeOffer={makeOffer} />
+          <ListingCard key={listing.id} listing={listing} makeOffer={makeOffer} canOffer={canOffer} />
         ))}
       </ul>
     </>

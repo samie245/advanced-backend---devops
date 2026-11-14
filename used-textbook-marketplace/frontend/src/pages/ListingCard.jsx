@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function ListingCard({ listing, makeOffer }) {
+function ListingCard({ listing, makeOffer, canOffer }) {
   const [buyerRoll, setBuyerRoll] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
   const [note, setNote] = useState(""); // the error or success message for this card's offer
@@ -13,11 +13,15 @@ function ListingCard({ listing, makeOffer }) {
       <p>Condition: {listing.condition}</p>
       <p>Seller: {listing.seller_roll}</p>
 
-      <h3>Make offer</h3>
-      <input placeholder="Roll number (Ex: 001)" value={buyerRoll} onChange={(e) => setBuyerRoll(e.target.value)} />
-      <input placeholder="Offer price (1 - LP)" value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} />
-      <p>{note}</p>
-      <button onClick={() => makeOffer(listing.id, buyerRoll, offerPrice, setNote)}>Make offer</button>
+      {canOffer && (
+        <>
+          <h3>Make offer</h3>
+          <input placeholder="Roll number (Ex: 001)" value={buyerRoll} onChange={(e) => setBuyerRoll(e.target.value)} />
+          <input placeholder="Offer price (1 - LP)" value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} />
+          <p>{note}</p>
+          <button onClick={() => makeOffer(listing.id, buyerRoll, offerPrice, setNote)}>Make offer</button>
+        </>
+      )}
     </li>
   );
 }

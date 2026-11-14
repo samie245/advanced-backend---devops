@@ -4,7 +4,7 @@ import {useState} from "react";
 
 const API_URL = "http://127.0.0.1:8001";
 
-function SellPage() {
+function SellPage({token, role}) {
   const [sellerRoll, setSellerRoll] = useState("");
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
@@ -17,7 +17,7 @@ function SellPage() {
     setNote("");
     fetch(API_URL + "/listings", {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
+      headers: {"Content-Type": "application/json", token: token},
       body: JSON.stringify({seller_roll: sellerRoll, title: title, subject: subject, condition: condition, price: Number(price)}),
     })
       .then((response) => response.json())
@@ -29,6 +29,9 @@ function SellPage() {
         }
       });
   }
+
+  if (token === "") return <p>Please log in first.</p>;
+  if (role !== "seller" && role !== "admin") return <p>Only sellers can list books.</p>;
 
   return (
     <>
