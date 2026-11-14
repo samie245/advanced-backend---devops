@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, Column, DateTime, ForeignKey, create_engine
+from sqlalchemy import Integer, String, Column, DateTime, ForeignKey, create_engine, func
 from sqlalchemy.orm import Session, declarative_base
 from datetime import datetime, timedelta, timezone
 import jwt 
@@ -134,32 +134,18 @@ def delete_package(package_id):
 # E5 searches packages by destination, status or arrival date
 def search_package(destination=None, status=None, arrival_date=None):
     session = Session(engine)
-    result = []
-    for package in session.query(packages).all():
-        result.append(convert_dict(package))
-    session.close()
+    query = session.query(packages)
 
     if destination is not None:
-        by_destination = []
-        for item in result:
-            if item["destination"] == destination:
-                by_destination.append(item)
-        result = by_destination
-
+        query = query.filter(packages.destination == destination)
     if status is not None:
-        by_status = []
-        for item in result:
-            if item["status"] == status:
-                by_status.append(item)
-        result = by_status
-
+        query = query.filter(packages.status == status)
     if arrival_date is not None:
-        by_date = []
-        for item in result:
-            if item["arrival_date"].date() == arrival_date:
-                by_date.append(item)
-        result = by_date
-
+        query = query.filter(func.date(packages.arrival_date) == arrival_date)
+    result = []
+    for package in query.all():
+        result.append(convert_dict(package))
+    session.close()
     return result
 
 
