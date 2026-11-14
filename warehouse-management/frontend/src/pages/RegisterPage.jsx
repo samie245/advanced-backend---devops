@@ -9,7 +9,7 @@ function RegisterPage() {
 
     // registers a user
     async function register() {
-        const res = await fetch("http://localhost:8001/signup", {
+        const res = await fetch("http://localhost:8000/signup", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({username: username, password: password, user_type: userType})
@@ -27,7 +27,7 @@ function RegisterPage() {
         <>
         <h2>Register</h2>
         <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <select value={userType} onChange={(e) => setUserType(e.target.value)}>
             <option value="customer">Customer</option>
             <option value="delivery_partner">Delivery Partner</option>

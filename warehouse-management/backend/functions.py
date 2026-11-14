@@ -253,7 +253,7 @@ def create_token(user_id, user_type, username, token_type):
     return token
 
 # verifying token
-def verify_token(token, token_type):
+def verify_token(token, token_type="access"):
     try:
         payload = jwt.decode(jwt=token, key=SECRET_KEY, algorithms=ALGORITHM)
         data = TokenPayload.model_validate(payload)
@@ -261,7 +261,7 @@ def verify_token(token, token_type):
         return False
     
     if  data.token_type == token_type:
-        return data.username
+        return data
     return False
 
 # registering a user
