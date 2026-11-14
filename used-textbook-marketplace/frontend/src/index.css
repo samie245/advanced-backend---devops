@@ -1,0 +1,676 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+* {
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
+/* ========================================================
+   CUSTOM RETRO PIXEL SCROLLBAR & SELECTION
+   ======================================================== */
+::selection {
+  background: #ffcf56;
+  color: #190e1f;
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: #140b18;
+  border-left: 3px solid #3d2522;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8c4f30;
+  border: 3px solid #140b18;
+  box-shadow: inset 2px 2px 0 #c97d4b;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b5683d;
+}
+
+/* ========================================================
+   COZY PIXEL BOOKSTORE KEYFRAME ANIMATIONS
+   ======================================================== */
+@keyframes signSwing {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(3px) rotate(-0.4deg);
+  }
+}
+
+@keyframes lanternBreath {
+
+  0%,
+  100% {
+    opacity: 0.92;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes fireflyDrift {
+  0% {
+    background-position: 0px 0px, 60px 120px, 140px 40px, 0px 0px;
+  }
+
+  50% {
+    background-position: 20px -120px, 40px 0px, 160px -80px, 0px 0px;
+  }
+
+  100% {
+    background-position: 0px -240px, 60px -120px, 140px -200px, 0px 0px;
+  }
+}
+
+@keyframes foilShimmer {
+  0% {
+    background-position: -180% 0, 0 0;
+  }
+
+  100% {
+    background-position: 220% 0, 0 0;
+  }
+}
+
+@keyframes coinFlip {
+
+  0%,
+  100% {
+    transform: translateY(0) scaleX(1);
+    filter: drop-shadow(0 0 2px #ffcf56);
+  }
+
+  50% {
+    transform: translateY(-3px) scaleX(0.5);
+    filter: drop-shadow(0 0 8px #fff2a1);
+  }
+}
+
+@keyframes tomeAppear {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes floatBookmark {
+
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(1.08);
+  }
+}
+
+/* ========================================================
+   2D PIXEL ART LIBRARY WALLPAPER (CRISP SVG TILE + SUNBEAMS)
+   ======================================================== */
+body {
+  margin: 0;
+  padding: 42px 16px 72px;
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 22px;
+  color: #f7ebd9;
+  letter-spacing: 0.5px;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #160d1c;
+
+  /* Layer 1: Warm Candlelight Vignette
+     Layer 2: Diagonal Golden Window Sunbeams
+     Layer 3: True 2D Pixel Art Bookshelf SVG Tile (varied book heights, gold bands, shelf candles, oak ledges) */
+  background-image:
+    radial-gradient(circle at 50% 20%,
+      rgba(255, 198, 92, 0.16) 0%,
+      rgba(26, 14, 34, 0.78) 65%,
+      rgba(12, 6, 18, 0.94) 100%),
+    linear-gradient(125deg,
+      transparent 15%,
+      rgba(255, 214, 133, 0.05) 28%,
+      rgba(255, 214, 133, 0.11) 33%,
+      transparent 42%,
+      transparent 58%,
+      rgba(255, 214, 133, 0.07) 66%,
+      transparent 76%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='32' viewBox='0 0 64 32' shape-rendering='crispEdges'%3E%3Crect width='64' height='32' fill='%23190f21'/%3E%3Crect x='0' y='0' width='4' height='26' fill='%232c1917'/%3E%3Crect x='1' y='0' width='1' height='26' fill='%23422621'/%3E%3Crect x='4' y='3' width='6' height='23' fill='%238c2633'/%3E%3Crect x='5' y='3' width='1' height='23' fill='%23b53746'/%3E%3Crect x='4' y='7' width='6' height='2' fill='%23f2c14e'/%3E%3Crect x='4' y='20' width='6' height='2' fill='%23f2c14e'/%3E%3Crect x='10' y='6' width='5' height='20' fill='%23236b56'/%3E%3Crect x='11' y='6' width='1' height='20' fill='%23339175'/%3E%3Crect x='10' y='10' width='5' height='1' fill='%23f2c14e'/%3E%3Crect x='15' y='4' width='7' height='22' fill='%232e4482'/%3E%3Crect x='16' y='4' width='1' height='22' fill='%234562b0'/%3E%3Crect x='15' y='8' width='7' height='2' fill='%23e8b548'/%3E%3Crect x='17' y='13' width='3' height='4' fill='%23e8b548'/%3E%3Crect x='22' y='8' width='5' height='18' fill='%23683278'/%3E%3Crect x='23' y='8' width='1' height='18' fill='%2389469e'/%3E%3Crect x='22' y='12' width='5' height='1' fill='%23f5d76e'/%3E%3Crect x='27' y='5' width='6' height='21' fill='%23995424'/%3E%3Crect x='28' y='5' width='1' height='21' fill='%23bd6d33'/%3E%3Crect x='27' y='9' width='6' height='2' fill='%23f2c14e'/%3E%3Crect x='34' y='18' width='4' height='8' fill='%23f5ebd6'/%3E%3Crect x='35' y='18' width='2' height='8' fill='%23e0cfa9'/%3E%3Crect x='35' y='14' width='2' height='3' fill='%23ffcf56'/%3E%3Crect x='35' y='13' width='1' height='1' fill='%23ffffff'/%3E%3Crect x='33' y='25' width='6' height='1' fill='%23d48c46'/%3E%3Crect x='40' y='4' width='6' height='22' fill='%23732245'/%3E%3Crect x='41' y='4' width='1' height='22' fill='%2399335e'/%3E%3Crect x='40' y='8' width='6' height='2' fill='%23f2c14e'/%3E%3Crect x='46' y='7' width='5' height='19' fill='%232b6e68'/%3E%3Crect x='47' y='7' width='1' height='19' fill='%233d948c'/%3E%3Crect x='46' y='12' width='5' height='1' fill='%23f2c14e'/%3E%3Crect x='51' y='3' width='7' height='23' fill='%23593122'/%3E%3Crect x='52' y='3' width='1' height='23' fill='%23784532'/%3E%3Crect x='51' y='7' width='7' height='2' fill='%23f2c14e'/%3E%3Crect x='51' y='21' width='7' height='2' fill='%23f2c14e'/%3E%3Crect x='58' y='6' width='6' height='20' fill='%23383478'/%3E%3Crect x='59' y='6' width='1' height='20' fill='%23514ca3'/%3E%3Crect x='58' y='10' width='6' height='2' fill='%23f2c14e'/%3E%3Crect x='0' y='26' width='64' height='1' fill='%239c5a2e'/%3E%3Crect x='0' y='27' width='64' height='3' fill='%236e3b1e'/%3E%3Crect x='0' y='30' width='64' height='2' fill='%230d0612'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 256px 128px;
+  background-attachment: fixed;
+}
+
+/* Enchanted Floating Fireflies & Dust Motes */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(#ffe89e 2px, transparent 2.5px),
+    radial-gradient(#ffcf56 1.5px, transparent 2px),
+    radial-gradient(#c084fc 1.5px, transparent 2px),
+    radial-gradient(circle at 50% 30%, rgba(255, 196, 87, 0.08), transparent 70%);
+  background-size: 200px 240px, 260px 240px, 320px 240px, 100% 100%;
+  opacity: 0.7;
+  animation:
+    fireflyDrift 18s linear infinite,
+    lanternBreath 4s ease-in-out infinite;
+}
+
+/* Soft Retro CRT Scanline & Warm Tone Overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  background: repeating-linear-gradient(0deg,
+      rgba(12, 5, 18, 0.13) 0px,
+      rgba(12, 5, 18, 0.13) 1px,
+      transparent 1px,
+      transparent 3px);
+}
+
+/* ========================================================
+   GRAND LIBRARY ARCHIVE BOARD (#root)
+   ======================================================== */
+#root {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(120, 62, 42, 0.25) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(28, 17, 33, 0.92) 0%, rgba(19, 11, 24, 0.96) 100%);
+  border: 4px solid #8c5230;
+  box-shadow:
+    inset 0 0 0 4px #381e19,
+    inset 0 0 0 6px #c98a4b,
+    0 0 0 4px #0b0510,
+    0 20px 50px rgba(0, 0, 0, 0.9);
+  padding: 32px 28px 42px;
+  backdrop-filter: blur(2px);
+}
+
+/* ========================================================
+   HANGING CARVED OAK BOOKSHOP SIGNBOARD (h1)
+   ======================================================== */
+h1 {
+  position: relative;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 22px;
+  text-align: center;
+  color: #fff3c4;
+  text-shadow:
+    0 2px 0 #b45309,
+    3px 3px 0px #160a06,
+    -2px -2px 0 #160a06,
+    2px -2px 0 #160a06,
+    -2px 2px 0 #160a06;
+  margin: 10px 0 34px 0;
+  padding: 22px 20px;
+  background:
+    repeating-linear-gradient(0deg,
+      #4a2518 0px,
+      #4a2518 10px,
+      #3b1c12 10px,
+      #3b1c12 20px);
+  border: 4px solid #f59e0b;
+  box-shadow:
+    inset 0 0 0 4px #78350f,
+    inset 0 4px 0 4px #b45309,
+    0 0 0 4px #0d0612,
+    8px 10px 0 4px rgba(8, 3, 12, 0.85),
+    0 0 28px rgba(245, 158, 11, 0.22);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: signSwing 4.5s steps(4, end) infinite;
+}
+
+/* Decorative Lanterns & Chains on Title Banner */
+h1::before,
+h1::after {
+  content: "🏮";
+  position: absolute;
+  top: -18px;
+  font-size: 18px;
+  filter: drop-shadow(0 0 8px #fbbf24);
+}
+
+h1::before {
+  left: 24px;
+}
+
+h1::after {
+  right: 24px;
+}
+
+/* ========================================================
+   AISLE PLAQUES & SECTION HEADINGS (h2, h3, h4)
+   ======================================================== */
+h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #ffcf56;
+  text-shadow: 2px 2px 0px #0d0612;
+  margin: 34px 0 18px 0;
+  padding: 12px 16px;
+  background:
+    linear-gradient(90deg, rgba(74, 37, 24, 0.9) 0%, rgba(45, 23, 38, 0.4) 70%, transparent 100%);
+  border-left: 6px solid #ffcf56;
+  border-top: 2px solid #78422b;
+  border-bottom: 3px dashed #6e473b;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: -4px 4px 0 rgba(11, 5, 16, 0.6);
+}
+
+h2::before {
+  content: "✨";
+  font-size: 14px;
+}
+
+h3 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #fbcfe8;
+  text-shadow: 2px 2px 0 #0d0612;
+  margin: 14px 0 8px 0;
+  line-height: 1.5;
+}
+
+h4 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #fde68a;
+  margin: 12px 0 6px 0;
+}
+
+/* ========================================================
+   16-BIT RPG DIALOGUE SCROLL (.message)
+   ======================================================== */
+.message {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  line-height: 1.75;
+  background:
+    linear-gradient(180deg, #fff6dd 0%, #edd6b1 100%);
+  color: #361a12;
+  border: 4px solid #78350f;
+  box-shadow:
+    inset 0 0 0 3px #c9a777,
+    0 0 0 4px #0d0612,
+    6px 6px 0 4px rgba(11, 5, 16, 0.8);
+  padding: 16px 20px;
+  margin: 18px 0 28px;
+  position: relative;
+  animation: tomeAppear 0.25s steps(4, end);
+}
+
+.message::before {
+  content: "🦉 HEAD LIBRARIAN:";
+  display: block;
+  font-size: 9px;
+  color: #991b1b;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+/* ========================================================
+   VELLUM LEDGER INPUTS & WAX-SEAL BUTTONS
+   ======================================================== */
+input,
+select {
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  background: #f7ead2;
+  color: #26120b;
+  border: 3px solid #6e4228;
+  box-shadow:
+    inset 3px 3px 0 #d4be98,
+    inset -2px -2px 0 #ffffff,
+    4px 4px 0 #0d0612;
+  padding: 7px 14px;
+  margin: 4px 8px 8px 0;
+  outline: none;
+  transition: transform 0.1s steps(2), border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
+}
+
+input:focus,
+select:focus {
+  border-color: #ffcf56;
+  background: #fffdf7;
+  transform: translate(-2px, -2px);
+  box-shadow:
+    inset 2px 2px 0 #e6d3b3,
+    6px 6px 0 #0d0612,
+    0 0 12px rgba(255, 207, 86, 0.35);
+}
+
+input::placeholder {
+  color: #85674b;
+}
+
+/* Tactile Arcade Pixel Buttons */
+button {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  background: linear-gradient(180deg, #b91c1c 0%, #881313 100%);
+  color: #fff3c4;
+  border: 3px solid #0d0612;
+  box-shadow:
+    inset -2px -2px 0px 0px #520909,
+    inset 2px 2px 0px 0px #f87171,
+    4px 4px 0px 0px #0d0612;
+  padding: 10px 14px;
+  margin: 4px 8px 8px 0;
+  cursor: pointer;
+  text-transform: uppercase;
+  user-select: none;
+  position: relative;
+  transition: transform 0.08s steps(2), box-shadow 0.08s, filter 0.12s;
+}
+
+button:hover {
+  filter: brightness(1.15);
+  color: #ffffff;
+  transform: translate(-2px, -2px);
+  box-shadow:
+    inset -2px -2px 0px 0px #520909,
+    inset 2px 2px 0px 0px #fecaca,
+    6px 6px 0px 0px #0d0612,
+    0 0 10px rgba(248, 113, 113, 0.35);
+}
+
+button:active {
+  transform: translate(2px, 2px);
+  box-shadow:
+    inset -1px -1px 0px 0px #520909,
+    inset 1px 1px 0px 0px #f87171,
+    1px 1px 0px 0px #0d0612;
+}
+
+/* ========================================================
+   WOODEN DISPLAY BOOKCASE GRID (.products)
+   ======================================================== */
+.products {
+  list-style: none;
+  margin: 24px 0;
+  padding: 22px 18px 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+  gap: 32px 24px;
+  background:
+    linear-gradient(180deg, rgba(16, 8, 22, 0.75) 0%, rgba(12, 6, 16, 0.9) 100%);
+  border: 4px solid #4a2819;
+  border-bottom: 14px solid #733f24;
+  box-shadow:
+    inset 0 8px 18px rgba(0, 0, 0, 0.75),
+    inset 0 -4px 0 #472413,
+    0 10px 0 #0d0612;
+}
+
+/* ========================================================
+   ENCHANTED HARDCOVER TOME CARDS (.product + 4 COLORWAYS)
+   ======================================================== */
+.product {
+  --spine-dark: #4f121d;
+  --spine-light: #8c2232;
+  --cover-bg: #2a1826;
+  --cover-border: #8f4d38;
+  --ribbon-color: #ef4444;
+  --ribbon-border: #7f1d1d;
+
+  /* Layer 1: Diagonal Gold-Foil Shimmer on Hover
+     Layer 2: Ribbed Leather Spine + Gold Trim + Hardcover Texture */
+  background-image:
+    linear-gradient(115deg,
+      transparent 35%,
+      rgba(255, 225, 130, 0.16) 48%,
+      rgba(255, 245, 200, 0.28) 50%,
+      rgba(255, 225, 130, 0.16) 52%,
+      transparent 65%),
+    linear-gradient(90deg,
+      var(--spine-dark) 0px,
+      var(--spine-light) 10px,
+      #1a0912 14px,
+      #f59e0b 14px,
+      #f59e0b 17px,
+      var(--cover-bg) 17px);
+  background-size: 250% 100%, 100% 100%;
+  background-position: -180% 0, 0 0;
+  border-top: 4px solid var(--cover-border);
+  border-left: 4px solid #240a12;
+  border-right: 8px solid #ede0c8;
+  /* 3D Cream Page Fore-Edge */
+  border-bottom: 8px solid #d4c2a1;
+  /* 3D Bottom Page Stack */
+  box-shadow:
+    inset -3px -3px 0 rgba(0, 0, 0, 0.35),
+    0 0 0 3px #0d0612,
+    7px 8px 0 3px #09040d;
+  padding: 20px 18px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  animation: tomeAppear 0.35s steps(5, end) backwards;
+  transition:
+    transform 0.16s steps(3, end),
+    box-shadow 0.16s steps(3, end),
+    border-color 0.16s;
+}
+
+/* Colorway 1: Crimson Grimoire (Default / 4n+1) */
+.product:nth-child(4n+1) {
+  --spine-dark: #591522;
+  --spine-light: #9e2438;
+  --cover-bg: #2b1623;
+  --cover-border: #9e4747;
+  --ribbon-color: #ef4444;
+  --ribbon-border: #7f1d1d;
+}
+
+/* Colorway 2: Emerald Herbalist Tome (4n+2) */
+.product:nth-child(4n+2) {
+  --spine-dark: #114232;
+  --spine-light: #1f7357;
+  --cover-bg: #152628;
+  --cover-border: #3d8c6e;
+  --ribbon-color: #f59e0b;
+  --ribbon-border: #78350f;
+}
+
+/* Colorway 3: Astral Sapphire Codex (4n+3) */
+.product:nth-child(4n+3) {
+  --spine-dark: #1a2c63;
+  --spine-light: #2d4ea8;
+  --cover-bg: #182038;
+  --cover-border: #4c6eb8;
+  --ribbon-color: #38bdf8;
+  --ribbon-border: #0c4a6e;
+}
+
+/* Colorway 4: Royal Amethyst Chronicle (4n+4) */
+.product:nth-child(4n+4) {
+  --spine-dark: #3e1b5c;
+  --spine-light: #6b309c;
+  --cover-bg: #241733;
+  --cover-border: #8652b3;
+  --ribbon-color: #f472b6;
+  --ribbon-border: #831843;
+}
+
+/* Silk Bookmark Ribbon Hanging from Top-Right */
+.product::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: 16px;
+  width: 13px;
+  height: 24px;
+  background: var(--ribbon-color);
+  border-left: 2px solid var(--ribbon-border);
+  border-right: 2px solid var(--ribbon-border);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 74%, 0 100%);
+  transform-origin: top center;
+  transition: height 0.15s steps(3, end);
+}
+
+/* Hovering Pulls the Tome Off the Shelf + Sweeps Gold Foil Across Cover */
+.product:hover {
+  transform: translate(-4px, -8px);
+  border-top-color: #ffcf56;
+  animation: foilShimmer 0.85s ease-out forwards;
+  box-shadow:
+    inset -3px -3px 0 rgba(0, 0, 0, 0.35),
+    0 0 0 3px #0d0612,
+    11px 15px 0 3px #07030a,
+    0 0 24px rgba(255, 207, 86, 0.32);
+}
+
+.product:hover::after {
+  height: 34px;
+  animation: floatBookmark 1.2s steps(2, end) infinite;
+}
+
+/* Book Title Inside Card */
+.product h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #fff6dc;
+  background: none;
+  margin: 0;
+  padding: 0 18px 0 0;
+  border: none;
+  box-shadow: none;
+  line-height: 1.5;
+  text-shadow: 2px 2px 0 #0d0612;
+}
+
+.product:nth-child(4n+1) h2::before {
+  content: "📕 ";
+}
+
+.product:nth-child(4n+2) h2::before {
+  content: "📗 ";
+}
+
+.product:nth-child(4n+3) h2::before {
+  content: "📘 ";
+}
+
+.product:nth-child(4n+4) h2::before {
+  content: "📙 ";
+}
+
+.product p {
+  margin: 0;
+  color: #e6d5b8;
+  font-size: 21px;
+}
+
+/* Gold Coin Price Badge */
+.product p:first-of-type {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  color: #ffe066;
+  background: rgba(13, 6, 18, 0.55);
+  border: 2px solid #854d0e;
+  padding: 5px 10px;
+  align-self: flex-start;
+  text-shadow: 2px 2px 0 #0d0612;
+  margin: 6px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.product p:first-of-type::before {
+  content: "🪙";
+  font-size: 13px;
+  display: inline-block;
+  animation: coinFlip 1.8s steps(4, end) infinite;
+}
+
+.product h3 {
+  font-size: 10px;
+  color: #ffcf56;
+  margin: 10px 0 4px;
+  padding-top: 10px;
+  border-top: 2px dashed rgba(255, 207, 86, 0.3);
+}
+
+/* ========================================================
+   CARVED WOODEN SHELF DIVIDER (hr)
+   ======================================================== */
+hr {
+  border: none;
+  height: 10px;
+  background: linear-gradient(180deg, #8c5230 0%, #4d2916 100%);
+  border-top: 2px solid #b87343;
+  border-bottom: 3px solid #0d0612;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5);
+  margin: 28px 0;
+}
+
+/* ========================================================
+   LIBRARY TRADE LEDGER STATUS CARDS (.pending, .accepted, .declined)
+   ======================================================== */
+.pending,
+.accepted,
+.declined {
+  padding: 10px 14px;
+  margin: 8px 0;
+  box-shadow: 4px 4px 0 #0d0612;
+  transition: transform 0.1s steps(2);
+}
+
+.pending:hover,
+.accepted:hover,
+.declined:hover {
+  transform: translateX(3px);
+}
+
+.pending {
+  background: #332414;
+  border: 2px solid #a16207;
+  border-left: 8px solid #facc15;
+}
+
+.accepted {
+  background: #132e22;
+  border: 2px solid #15803d;
+  border-left: 8px solid #4ade80;
+}
+
+.declined {
+  background: #36171d;
+  border: 2px solid #991b1b;
+  border-left: 8px solid #f87171;
+}
+
+.accepted button,
+.declined button {
+  display: none;
+}

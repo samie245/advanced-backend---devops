@@ -29,7 +29,7 @@ function PackagesPage({token}) {
         <p>Loaded {packages.length} packages.</p>
         <p>{message}</p>
         <ul>
-            {packages.map((pkg) => (
+            {packages.map((p) => (
                 <li key={pkg.package_id}>
                     <h3>{pkg.name}</h3>
                     <p>ID: {pkg.package_id}</p>

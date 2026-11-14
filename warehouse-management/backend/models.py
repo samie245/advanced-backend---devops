@@ -72,7 +72,7 @@ class PackageSearch(BaseModel):
     
 class DispatchBatchSearch(BaseModel):
     destination: Optional[str] = None
-    vehicle_number: Optional[int] = None   # "1234" becomes 1234, "abc" fails
+    vehicle_number: Optional[int] = None
     dispatch_status: Optional[str] = None
 
     @field_validator("dispatch_status")

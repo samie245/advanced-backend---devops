@@ -10,7 +10,7 @@ function LoginPage({setToken}) {
 
     // verify login
     async function login() {
-        const res = await fetch("http://localhost:8000/login", {
+        const res = await fetch("http://localhost:8001/login", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({username: username, password: password})
@@ -31,7 +31,7 @@ function LoginPage({setToken}) {
         <>
         <h2>Login</h2>
         <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <input placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input type= "password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button onClick={login}>Login</button>
         <p>{message}</p>
         {loggedIn && <Link to="/packages">View All Packages</Link>}
